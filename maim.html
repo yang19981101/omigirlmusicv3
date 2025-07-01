@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>屬於妳的專屬驚喜</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: linear-gradient(#a13f66, #ffb6c1);
+      overflow-x: hidden;
+      text-align: center;
+      color: white;
+      font-family: "微軟正黑體", sans-serif;
+    }
+    #snow-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    #content {
+      position: relative;
+      z-index: 2;
+      padding-top: 80px;
+    }
+    h1 {
+      font-size: 36px;
+    }
+    p {
+      font-size: 24px;
+      margin: 20px auto;
+      width: 90%;
+      line-height: 1.6em;
+    }
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      margin: 20px auto;
+      padding-top: 56.25%;
+    }
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="snow-canvas"></canvas>
+
+<div id="content">
+  <h1>給今天的妳 💖</h1>
+  <p id="quoteText"></p>
+
+  <div class="video-wrapper">
+    <iframe id="ytplayer" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </div>
+</div>
+
+<script>
+  // 隨機語錄，不重複
+  const quotes = [
+    "有時候，妳的不經意努力，就是我最深刻的感動。",
+    "這世界很亂，但我只想成為妳的平靜角落。",
+    "小夜的妳辛苦了，願我的文字成為妳的小確幸。",
+    "不管今天怎樣，都想讓妳知道，有人默默在乎妳。",
+    "每次妳笑，我的世界都變亮一點。",
+    "或許這樣的關心很傻，但對妳的在意從來沒打過折扣。",
+    "願這一刻，妳感受到真心與溫暖。"
+  ];
+
+  let shuffledQuotes = quotes.sort(() => Math.random() - 0.5);
+  document.getElementById('quoteText').innerText = shuffledQuotes[0];
+
+  // 隨機音樂，不重複
+  const youtubeIds = [
+    "DY2eiv9rHF4",  // 第一首
+    "E9yi19u0Y6o",  // 第二首
+    "XIYTWH_iUqU",  // 第三首
+    "pwvoH4aGbmE",  // 第四首
+    "CpodRBeFl3c",  // 第五首
+    "XIYTWH_iUqU",  // 第六首（若要換可改）
+    "qzfi7cM4zW0"   // 第七首
+  ];
+  let shuffledMusic = youtubeIds.sort(() => Math.random() - 0.5);
+  let chosenId = shuffledMusic[0];
+
+  document.getElementById('ytplayer').src = `https://www.youtube.com/embed/${chosenId}?autoplay=1&mute=1&rel=0&modestbranding=1`;
+
+  // 雪花效果
+  const canvas = document.getElementById('snow-canvas');
+  const ctx = canvas.getContext('2d');
+  let width, height;
+  let snowflakes = [];
+
+  function initSnow() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    snowflakes = [];
+    for (let i = 0; i < 100; i++) {
+      snowflakes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 4 + 1,
+        d: Math.random() * 1 + 0.5
+      });
+    }
+  }
+
+  function drawSnow() {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "white";
+    ctx.beginPath();
+    snowflakes.forEach(flake => {
+      ctx.moveTo(flake.x, flake.y);
+      ctx.arc(flake.x, flake.y, flake.r, 0, Math.PI * 2);
+    });
+    ctx.fill();
+    moveSnow();
+  }
+
+  function moveSnow() {
+    snowflakes.forEach(flake => {
+      flake.y += flake.d;
+      flake.x += Math.sin(flake.y * 0.01);
+      if (flake.y > height) {
+        flake.y = -flake.r;
+        flake.x = Math.random() * width;
+      }
+    });
+  }
+
+  window.addEventListener('resize', initSnow);
+  initSnow();
+  setInterval(drawSnow, 33);
+</script>
+
+</body>
+</html>
